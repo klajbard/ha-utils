@@ -1,0 +1,19 @@
+{
+  "name": "ha_utils",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "prettier": "prettier --write --check '**/*.{js,json}'"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jsdom": "^16.2.2",
+    "node-dht-sensor": "^0.4.3"
+  },
+  "devDependencies": {
+    "prettier": "^2.0.5"
+  }
+}

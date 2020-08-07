@@ -1,0 +1,47 @@
+{
+  "aws": {
+    "allowed": false,
+    "delay": 43200000,
+    "logFile": "./log/awscost"
+  },
+  "dht": {
+    "allowed": false,
+    "delay": 5000,
+    "pin": 4
+  },
+  "fixer": {
+    "allowed": false,
+    "delay": 5000,
+    "base": ["EUR", "USD", "CAD"],
+    "target": "HUF"
+  },
+  "ncore": {
+    "allowed": false,
+    "delay": 7200000
+  },
+  "presence": {
+    "allowed": false,
+    "delay": 5000,
+    "queries": [
+      {
+        "url": "https://edigital.hu/hordozhato-hangfal/mac-audio-bt-wild-201-vizallo-bluetooth-hangszoro-fekete-p506897",
+        "query": ".cart-wrapper"
+      }
+    ]
+  },
+  "scraper": {
+    "allowed": false,
+    "delay": 14400000,
+    "queries": [
+      {
+        "url": "https://holtankoljak.hu/arvaltozasok",
+        "query": ".post h2",
+        "logFile": "./log/current_scrape"
+      }
+    ]
+  },
+  "steamgifts": {
+    "allowed": false,
+    "delay": 300000
+  }
+}
