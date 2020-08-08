@@ -1,5 +1,13 @@
-## Home Automation Utils
-- Configuration for each utils are inside `src/config.json`
+# Home Automation Utils
+Configuration for each utils are inside `src/config.json`
+
+1. [AWS Cost](#aws-cost)
+2. [DHT](#dht)
+3. [Currency Exchanger(fixer.io)](#currency-exchangerfixerio)
+4. [nCore status](#ncore-status)
+5. [Check Presence](#check-presence)
+6. [Post checker](#post-checker)
+7. [Steamgift](#steamgift)
 
 ### AWS Cost
 Get current month AWS cost from `aws2` CLI and log to a file.
