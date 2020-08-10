@@ -2,7 +2,7 @@
 
 const fs = require("fs");
 const exec = require("child_process").exec;
-const { timestamp_log } = require("./utils");
+const { round, setState, timestampLog } = require("./utils");
 
 const FILE_VALID_TIME = 1000 * 60 * 60 * 24 * 4; // 4 days
 
@@ -40,6 +40,18 @@ async function isFilePresent(logFile) {
   return ret;
 }
 
+function sendCost(cost) {
+  const payload = {
+    state: round(parseInt(cost)),
+    attributes: {
+      friendly_name: "AWS monthly cost",
+      unit_of_measurement: "$",
+      icon: "mdi:currency-usd"
+    }
+  }
+  setState({sensor: `sensor.aws_monthly_cost`, payload})
+}
+
 function getCost(logFile) {
   const today = new Date();
   const currentMonth = getMonth(today);
@@ -53,7 +65,7 @@ function getCost(logFile) {
       reject(err);
     }
     if (!isPresent) {
-      timestamp_log(`[AWSCOST]: ${logFile} is not found, creating...`);
+      timestampLog(`[AWSCOST]: ${logFile} is not found, creating...`);
       fs.writeFileSync(logFile, "");
     }
     if (today - fs.statSync(logFile).mtime > FILE_VALID_TIME || !isPresent) {
@@ -62,22 +74,29 @@ function getCost(logFile) {
           "BlendedCost"
         ]["Amount"];
         fs.promises.writeFile(logFile, cost).then(() => {
-          resolve(`[AWSCOST]: Current cost is ${cost}`);
+          resolve(`[AWSCOST]: Updated cost to ${cost}`);
+          sendCost(cost)
         });
       });
     } else {
-      resolve(`[AWSCOST]: Cost was recently updated.`);
+      fs.promises.readFile(logFile, "utf-8").then(function(data) {
+        sendCost(data)
+        resolve(`[AWSCOST]: Updated cost to ${data}`);
+      }).catch(function(err) {
+        reject(err);
+      })
+      timestampLog(`[AWSCOST]: Cost was recently updated.`);
     }
   });
 }
 
 function getAWSCost({ delay = 60000, logFile }) {
-  timestamp_log(`[AWSCOST]: Querying...`);
+  timestampLog(`[AWSCOST]: Querying...`);
   getCost(logFile)
-    .then((msg) => timestamp_log(msg))
-    .catch((err) => timestamp_log(`[AWSCOST]: ${err}`))
+    .then((msg) => timestampLog(msg))
+    .catch((err) => timestampLog(`[AWSCOST]: ${err}`))
     .finally(() => {
-      timestamp_log(`[AWSCOST]: Next run in ${delay}ms`);
+      timestampLog(`[AWSCOST]: Next run in ${delay}ms`);
     });
   setTimeout(function () {
     getAWSCost({ delay, logFile });

@@ -1,4 +1,4 @@
-const { getData, timestamp_log, postData } = require("./utils");
+const { getData, timestampLog, postData } = require("./utils");
 
 function join_recent(sessionId) {
   const cookie = `PHPSESSID=${sessionId}`;
@@ -35,14 +35,14 @@ function join_recent(sessionId) {
       },
     };
     postData(post_options, payloadString).then((resp) => {
-      timestamp_log(`[SG]: ${resp}`);
+      timestampLog(`[SG]: ${resp}`);
     });
   });
 }
 
 function steamgifts({ delay = 60000, sessionId = "" }) {
   join_recent(sessionId);
-  timestamp_log(`[SG]: Next run in ${delay}ms`);
+  timestampLog(`[SG]: Next run in ${delay}ms`);
   setTimeout(function () {
     steamgifts({ delay, sessionId });
   }, delay);

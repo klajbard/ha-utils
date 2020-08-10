@@ -54,8 +54,31 @@ function postData(param, payload) {
         reject(error);
       });
     });
-    req.on("error", (e) => {
-      reject(error);
+    req.on("error", (err) => {
+      reject(err);
+    });
+    req.write(payload);
+    req.end();
+  });
+}
+
+function postDataHttp(param, payload) {
+  return new Promise((resolve, reject) => {
+    const req = http.request(param, (res) => {
+      res.setEncoding("utf8");
+      let body = "";
+      res.on("data", (data) => {
+        body += data;
+      });
+      res.on("end", () => {
+        resolve(body);
+      });
+      res.on("error", (error) => {
+        reject(error);
+      });
+    });
+    req.on("error", (err) => {
+      reject(err);
     });
     req.write(payload);
     req.end();
@@ -66,4 +89,5 @@ module.exports = {
   getData,
   getDataHttp,
   postData,
+  postDataHttp,
 };

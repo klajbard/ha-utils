@@ -1,6 +1,6 @@
 {
   "aws": {
-    "allowed": false,
+    "allowed": true,
     "delay": 43200000,
     "logFile": "./log/awscost"
   },
@@ -11,8 +11,8 @@
   },
   "fixer": {
     "allowed": false,
-    "delay": 5000,
-    "base": ["EUR", "USD", "CAD"],
+    "delay": 43200000,
+    "base": ["EUR", "USD", "GBP"],
     "target": "HUF"
   },
   "ncore": {

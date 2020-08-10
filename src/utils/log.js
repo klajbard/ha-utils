@@ -2,7 +2,7 @@ function appendZero(num) {
   return num < 10 ? `0${num}` : num;
 }
 
-function timestamp_log(text) {
+function timestampLog(text) {
   const date = new Date();
   const formatted_date = `${date.getFullYear()}-${appendZero(
     date.getMonth() + 1
@@ -13,5 +13,5 @@ function timestamp_log(text) {
 }
 
 module.exports = {
-  timestamp_log,
+  timestampLog,
 };

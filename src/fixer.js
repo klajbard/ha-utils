@@ -1,4 +1,4 @@
-const { getDataHttp, round, timestamp_log } = require("./utils");
+const { getDataHttp, round, setState, timestampLog } = require("./utils");
 
 function calculateCurrency(rates, baseList = [], target) {
   const isTargetValid =
@@ -11,6 +11,15 @@ function calculateCurrency(rates, baseList = [], target) {
     return Promise.reject("Currency is not valid");
   baseList.forEach(function (targetCurrency) {
     response[targetCurrency] = round(rates[target] / rates[targetCurrency]);
+    const payload = {
+      state: response[targetCurrency],
+      attributes: {
+        friendly_name: targetCurrency,
+        unit_of_measurement: target,
+        icon: "mdi:currency-usd"
+      }
+    }
+    setState({sensor: `sensor.${targetCurrency.toLowerCase()}`, payload})
   });
   return response;
 }
@@ -22,10 +31,10 @@ function fixer({ delay = 60000, api = "", base, target }) {
       const respJSON = JSON.parse(resp);
       if (!respJSON.success) return Promise.reject(resp);
       const data = calculateCurrency(respJSON.rates, base, target);
-      timestamp_log(`[FIXER] ${JSON.stringify(data)}`);
+      timestampLog(`[FIXER] ${JSON.stringify(data)}`);
     })
     .catch(function (err) {
-      timestamp_log(`[FIXER] ${err}`);
+      timestampLog(`[FIXER] ${err}`);
     })
     .finally(function () {
       setTimeout(function () {

@@ -2,7 +2,9 @@ module.exports = {
   getData: require("./scrape").getData,
   postData: require("./scrape").postData,
   getDataHttp: require("./scrape").getDataHttp,
+  postDataHttp: require("./scrape").postDataHttp,
   getPostOptions: require("./slack_utils").getPostOptions,
   round: require("./calculate").round,
-  timestamp_log: require("./log").timestamp_log,
+  setState: require("./hass").setState,
+  timestampLog: require("./log").timestampLog,
 };

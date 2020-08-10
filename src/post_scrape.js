@@ -3,7 +3,7 @@
 const https = require("https");
 const fs = require("fs");
 const { JSDOM } = require("jsdom");
-const { getData, getPostOptions, timestamp_log } = require("./utils");
+const { getData, getPostOptions, timestampLog } = require("./utils");
 
 function getPostData(data, url) {
   return JSON.stringify({
@@ -15,8 +15,8 @@ function callback(body, { url, query, logFile }) {
   const dom = new JSDOM(body);
   const text = dom.window.document.querySelector(query).innerHTML;
   if (!process.env.SLACK_SCRAPER) {
-    timestamp_log(`[POST_SCRAPE]: No Slack API given.`);
-    timestamp_log(`[POST_SCRAPE]: ${text}`);
+    timestampLog(`[POST_SCRAPE]: No Slack API given.`);
+    timestampLog(`[POST_SCRAPE]: ${text}`);
     return;
   }
   fs.readFile(logFile, (err, data) => {
@@ -25,7 +25,7 @@ function callback(body, { url, query, logFile }) {
     } else if (err) {
       console.log(err);
     }
-    timestamp_log(`[POST_SCRAPE]: Checking if new data is posted`);
+    timestampLog(`[POST_SCRAPE]: Checking if new data is posted`);
     if (!data || text !== data.toString()) {
       fs.writeFile(logFile, text, function (err) {
         if (err) {
@@ -45,12 +45,12 @@ function callback(body, { url, query, logFile }) {
 }
 
 function scraper({ delay = 60000, url, query, logFile }) {
-  timestamp_log(`[POST_SCRAPE]: Querying...`);
+  timestampLog(`[POST_SCRAPE]: Querying...`);
   getData(url)
     .then((body) => callback(body, { url, query, logFile }))
     .catch((err) => console.log(err))
     .finally(() => {
-      timestamp_log(`[POST_SCRAPE]: Next run in ${delay}ms`);
+      timestampLog(`[POST_SCRAPE]: Next run in ${delay}ms`);
     });
   setTimeout(function () {
     scraper({ delay, url, query, logFile });
