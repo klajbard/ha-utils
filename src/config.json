@@ -1,6 +1,6 @@
 {
   "aws": {
-    "allowed": true,
+    "allowed": false,
     "delay": 43200000,
     "logFile": "./log/awscost"
   },

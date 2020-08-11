@@ -1,5 +1,5 @@
 const dht = require("node-dht-sensor").promises;
-const { round, timestampLog } = require("./utils");
+const { round, setState, timestampLog } = require("./utils");
 
 function readFromPin(pin) {
   dht.setMaxRetries(5);
@@ -13,8 +13,26 @@ function readFromPin(pin) {
 }
 
 function callback(res) {
-  const { temperature: temp, humidity: hum } = res;
-  timestampLog(`[DHT]: ${round(temp)}°C ${round(hum)}%`);
+  const { temperature, humidity } = res;
+  const payloadTemp = {
+    state: round(temperature),
+    attributes: {
+      friendly_name: "RPI DHT temperature",
+      unit_of_measurement: "°C",
+      device_class: "temperature"
+    }
+  }
+  const payloadHum = {
+    state: round(humidity),
+    attributes: {
+      friendly_name: "RPI DHT humidity",
+      unit_of_measurement: "%",
+      device_class: "humidity"
+    }
+  }
+  setState({sensor: 'sensor.rpi_temperature', payload: payloadTemp})
+  setState({sensor: 'sensor.rpi_humidity', payload: payloadHum})
+  timestampLog(`[DHT]: ${round(temperature)}°C ${round(humidity)}%`);
 }
 
 function readDht({ delay = 10000, pin }) {

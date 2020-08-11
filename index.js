@@ -1,7 +1,7 @@
 const fs = require("fs");
 const { spawn } = require("child_process");
 
-const logStream = fs.createWriteStream("./utils.log", { flags: "a" });
+const logStream = fs.createWriteStream("./log/utils.log", { flags: "a" });
 const run = spawn("node", ["./src/index.js"]);
 
 run.stdout.pipe(logStream);
