@@ -6,7 +6,7 @@
   },
   "dht": {
     "allowed": true,
-    "delay": 5000,
+    "delay": 600000,
     "pin": 4
   },
   "fixer": {
@@ -20,7 +20,7 @@
     "delay": 7200000
   },
   "presence": {
-    "allowed": false,
+    "allowed": true,
     "delay": 5000,
     "queries": [
       {
@@ -30,7 +30,7 @@
     ]
   },
   "scraper": {
-    "allowed": false,
+    "allowed": true,
     "delay": 14400000,
     "queries": [
       {

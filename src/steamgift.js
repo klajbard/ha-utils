@@ -1,10 +1,10 @@
-const { getData, timestampLog, postData } = require("./utils");
+const { timestampLog, sendRequest } = require("./utils");
 
 function join_recent(sessionId) {
   const cookie = `PHPSESSID=${sessionId}`;
-  const url = "https://www.steamgifts.com";
 
   const get_options = {
+    host: "www.steamgifts.com",
     method: "GET",
     headers: {
       Cookie: cookie,
@@ -12,7 +12,7 @@ function join_recent(sessionId) {
     },
   };
 
-  getData(url, get_options).then((resp) => {
+  sendRequest(get_options).then((resp) => {
     const giveaway_url = resp
       .replace(/^\r\n+/gm, "")
       .replace(/^\s+/gm, "")
@@ -34,7 +34,7 @@ function join_recent(sessionId) {
         "Content-Length": payloadString.length,
       },
     };
-    postData(post_options, payloadString).then((resp) => {
+    sendRequest(post_options, payloadString).then((resp) => {
       timestampLog(`[SG]: ${resp}`);
     });
   });

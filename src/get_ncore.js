@@ -2,7 +2,7 @@
 
 const JSDOM = require("jsdom").JSDOM;
 const exec = require("child_process").exec;
-const { getData, setState, timestampLog } = require("./utils");
+const { sendRequest, setState, timestampLog } = require("./utils");
 
 const mapHun = [
   "ncore_daily_rank",
@@ -50,9 +50,9 @@ function callback(body) {
 
 function getRequestOptions(cookie) {
   return {
+    host: "ncore.cc",
+    path: "/hitnrun.php",
     method: "GET",
-    "Host": "ncore.cc",
-    "Path": "/hitnrun.php",
     headers: {
       "User-Agent": "curl/7.37.0",
       "Cookie": `PHPSESSID=${cookie}`,
@@ -61,12 +61,12 @@ function getRequestOptions(cookie) {
 }
 
 function get_ncore({ delay = 60000, user = { username: "", password: "" } }) {
-  const command = `curl -F "nev=Klajbi" -F "pass=Dealer11.." https://ncore.cc/login.php  -c - | grep -oP "(?<=PHPSESSID\\t).*?$" | tr -d "\\n"`;
+  const command = `curl -F "nev=${user.username}" -F "pass=${user.password}" https://ncore.cc/login.php  -c - | grep -oP "(?<=PHPSESSID\\t).*?$" | tr -d "\\n"`;
   exec(command, (err, stdout, stderr) => {
     const cookie = stdout;
     if (err) return console.error(err);
     timestampLog(`[NCORE]: Querying...`);
-    getData("https://ncore.cc/hitnrun.php", getRequestOptions(cookie))
+    sendRequest(getRequestOptions(cookie))
       .then(callback)
       .catch((err) => timestampLog(`[NCORE]: ${err}`))
       .finally(() => {

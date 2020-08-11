@@ -1,4 +1,4 @@
-const { getDataHttp, round, setState, timestampLog } = require("./utils");
+const { sendRequestHttp, round, setState, timestampLog } = require("./utils");
 
 function calculateCurrency(rates, baseList = [], target) {
   const isTargetValid =
@@ -25,8 +25,16 @@ function calculateCurrency(rates, baseList = [], target) {
 }
 
 function fixer({ delay = 60000, api = "", base, target }) {
-  const url = `http://data.fixer.io/api/latest?access_key=${api}&base=EUR`;
-  getDataHttp(url)
+  const options = {
+    host: "data.fixer.io",
+    path: `/api/latest?access_key=${api}&base=EUR`,
+    method: "GET",
+    headers: {
+      "Content-type": "application/json"
+    },
+  }
+
+  sendRequestHttp(options)
     .then(function (resp) {
       const respJSON = JSON.parse(resp);
       if (!respJSON.success) return Promise.reject(resp);

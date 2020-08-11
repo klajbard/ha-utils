@@ -2,11 +2,11 @@
 
 const https = require("https");
 const { JSDOM } = require("jsdom");
-const { getData, getPostOptions, timestampLog } = require("./utils");
+const { sendRequest, getPostOptions, timestampLog, url2options } = require("./utils");
 
 function callback(url, callbackLogic) {
   return function (body) {
-    function getPostData() {
+    function getsendRequest() {
       return JSON.stringify({
         text: `Presence checker succeed: ${url} !`,
       });
@@ -26,15 +26,21 @@ function callback(url, callbackLogic) {
       req.on("error", (e) => {
         console.error(e);
       });
-      req.write(getPostData());
+      req.write(getsendRequest());
       req.end();
     }
   };
 }
 
 function check_presence({ delay = 60000, url, callbackLogic }) {
-  timestampLog(`[CHECK_PRESENCE]: Querying...`);
-  getData(url)
+  timestampLog(`[CHECK_PRESENCE]: Querying...`)
+  const { host, path } = url2options(url)
+  const options = {
+    host,
+    path,
+    method: "GET"
+  }
+  sendRequest(options)
     .then(callback(url, callbackLogic))
     .catch((err) => timestampLog(`[CHECK_PRESENCE]: ${err}`))
     .finally(() => {

@@ -1,4 +1,4 @@
-const { getDataHttp, postDataHttp } = require("./scrape")
+const { sendRequestHttp } = require("./scrape")
 
 const hass_api_url = "http://192.168.1.27:8123/api/states"
 const hass_token = process.env.HASS_TOKEN
@@ -8,7 +8,14 @@ const headers = {
 }
 
 async function getState(sensor) {
-  return await getDataHttp(hass_api_url, {headers}).then(function(resp) {
+  const options = {
+    host: "192.168.1.27",
+    port: 8123,
+    path: `/api/states`,
+    method: "GET",
+    headers,
+  }
+  return await sendRequestHttp(options).then(function(resp) {
     if (resp.indexOf("401") === 0) return Promise.reject("Unauthorized")
     const response = JSON.parse(resp)
     const state = response.find((elem) => elem.entity_id === sensor)
@@ -28,7 +35,7 @@ function setState({sensor, payload}) {
     headers,
   }
   return new Promise((resolve, reject) => {
-      postDataHttp(options, JSON.stringify(payload)).then(function(resp) {
+      sendRequestHttp(options, JSON.stringify(payload)).then(function(resp) {
       if (resp.indexOf("401") === 0) return Promise.reject("Unauthorized")
       resolve(resp)
     }).catch(err => {

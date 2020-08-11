@@ -3,9 +3,9 @@
 const https = require("https");
 const fs = require("fs");
 const { JSDOM } = require("jsdom");
-const { getData, getPostOptions, timestampLog } = require("./utils");
+const { sendRequest, getPostOptions, timestampLog, url2options } = require("./utils");
 
-function getPostData(data, url) {
+function getsendRequest(data, url) {
   return JSON.stringify({
     text: `*${data}*\n${url}`,
   });
@@ -38,7 +38,7 @@ function callback(body, { url, query, logFile }) {
       req.on("error", (e) => {
         console.error(e);
       });
-      req.write(getPostData(text, url));
+      req.write(getsendRequest(text, url));
       req.end();
     }
   });
@@ -46,7 +46,13 @@ function callback(body, { url, query, logFile }) {
 
 function scraper({ delay = 60000, url, query, logFile }) {
   timestampLog(`[POST_SCRAPE]: Querying...`);
-  getData(url)
+  const { host, path } = url2options(url)
+  const options = {
+    host,
+    path,
+    method: "GET"
+  }
+  sendRequest(options)
     .then((body) => callback(body, { url, query, logFile }))
     .catch((err) => console.log(err))
     .finally(() => {
