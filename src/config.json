@@ -20,7 +20,7 @@
     "delay": 7200000
   },
   "presence": {
-    "allowed": true,
+    "allowed": false,
     "delay": 5000,
     "queries": [
       {
@@ -30,7 +30,7 @@
     ]
   },
   "scraper": {
-    "allowed": true,
+    "allowed": false,
     "delay": 14400000,
     "queries": [
       {
