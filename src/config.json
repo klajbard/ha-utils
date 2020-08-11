@@ -5,18 +5,18 @@
     "logFile": "./log/awscost"
   },
   "dht": {
-    "allowed": false,
+    "allowed": true,
     "delay": 5000,
     "pin": 4
   },
   "fixer": {
-    "allowed": false,
+    "allowed": true,
     "delay": 43200000,
     "base": ["EUR", "USD", "GBP"],
     "target": "HUF"
   },
   "ncore": {
-    "allowed": false,
+    "allowed": true,
     "delay": 7200000
   },
   "presence": {
@@ -41,7 +41,7 @@
     ]
   },
   "steamgifts": {
-    "allowed": false,
+    "allowed": true,
     "delay": 300000
   }
 }
