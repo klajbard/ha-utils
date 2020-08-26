@@ -16,7 +16,7 @@ function calculateCurrency(rates, baseList = [], target) {
       attributes: {
         friendly_name: targetCurrency,
         unit_of_measurement: target,
-        icon: "mdi:currency-usd"
+        icon: `mdi:currency-${targetCurrency.toLowerCase()}`
       }
     }
     setState({sensor: `sensor.${targetCurrency.toLowerCase()}`, payload})

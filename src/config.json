@@ -30,7 +30,7 @@
     ]
   },
   "scraper": {
-    "allowed": false,
+    "allowed": true,
     "delay": 14400000,
     "queries": [
       {
