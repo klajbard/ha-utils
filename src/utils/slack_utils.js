@@ -1,6 +1,7 @@
 const SLACK_API = {
   scraper: `/services/${process.env.SLACK_SCRAPER}`,
   presence: `/services/${process.env.SLACK_PRESENCE}`,
+  nokia: `/services/${process.env.SLACK_NOKIA}`,
 };
 
 function getPostOptions(channel) {

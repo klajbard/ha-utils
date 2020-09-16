@@ -7,6 +7,7 @@ const { get_ncore } = require("./get_ncore");
 const { readDht } = require("./dht");
 const { steamgifts } = require("./steamgift");
 const { fixer } = require("./fixer");
+const { covid } = require("./covid");
 const config = require("./config.json");
 
 const ncore_user = {
@@ -52,4 +53,5 @@ const fixer_api = process.env.FIXERAPI;
       base: config.fixer.base,
       target: config.fixer.target,
     });
+  config.covid.allowed && covid({delay: config.covid.delay, logFile: config.covid.logFile})
 })();

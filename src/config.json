@@ -1,8 +1,13 @@
 {
   "aws": {
-    "allowed": false,
+    "allowed": true,
     "delay": 43200000,
     "logFile": "./log/awscost"
+  },
+  "covid": {
+    "allowed": true,
+    "delay": 5000,
+    "logFile": "./log/covid"
   },
   "dht": {
     "allowed": true,
