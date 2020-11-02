@@ -39,7 +39,7 @@
     "delay": 14400000,
     "queries": [
       {
-        "url": "https://holtankoljak.net/uzemanyag_arvaltozasok#tartalom",
+        "url": "https://holtankoljak.hu/uzemanyag_arvaltozasok#tartalom",
         "query": "#Holtankoljak_cikk_leaderboard_top_1 ~ .row .container a",
         "logFile": "./log/current_scrape"
       }
