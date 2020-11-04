@@ -47,7 +47,6 @@ function callback(res, logFile) {
     const fertozottekElozo = getSum(covidData)
     const fertozottekFriss = getSum(JSON.parse(data.toString()))
     const delta = Math.abs(fertozottekFriss - fertozottekElozo);
-    timestampLog(`[COVID]: ${JSON.stringify(covidData)}`);
     if (!data || JSON.stringify(covidData) !== data.toString()) {
       fs.writeFile(logFile, JSON.stringify(covidData), function (err) {
         if (err) {
@@ -79,7 +78,6 @@ function covid({delay, logFile}) {
     host: "koronavirus.gov.hu",
     method: "GET"
   }
-  timestampLog('[COVID] Querying...')
   sendRequest(options)
     .then(res => callback(res, logFile))
     .catch((err) => timestampLog(`[COVID]: ${err}`))
