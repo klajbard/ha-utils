@@ -5,11 +5,18 @@ const fs = require("fs")
 const { JSDOM } = require("jsdom");
 const { sendRequest, getPostOptions, timestampLog } = require("./utils");
 
-function getsendRequest(data) {
+function getsendRequest(data, delta) {
   return JSON.stringify({
     icon_emoji: ":mask:",
-    text: `*COVID*\nFertozottek: *${data.fertozott}*\nElhunytak: *${data.elhunyt}*\nGyogyultak: *${data.gyogyult}*`,
+    text: `*COVID*\n:biohazard_sign: *${data.fertozott}*\n:skull: *${data.elhunyt}*\n:heartpulse: *${data.gyogyult}*\n:chart_with_upwards_trend: *${delta}*`,
   });
+}
+
+function getSum(data) {
+  return Object.values(data).reduce((sum, value) => {
+    sum += value;
+    return sum;
+  }, 0);
 }
 
 function callback(res, logFile) {
@@ -37,10 +44,11 @@ function callback(res, logFile) {
     } else if (err) {
       console.log(err);
     }
-    timestampLog(`[COVID]: Checking if new data is posted`);
+    const fertozottekElozo = getSum(covidData)
+    const fertozottekFriss = getSum(JSON.parse(data.toString()))
+    const delta = Math.abs(fertozottekFriss - fertozottekElozo);
+    timestampLog(`[COVID]: ${JSON.stringify(covidData)}`);
     if (!data || JSON.stringify(covidData) !== data.toString()) {
-      console.log(covidData)
-      console.log(data.toString())
       fs.writeFile(logFile, JSON.stringify(covidData), function (err) {
         if (err) {
           console.log(err);
@@ -49,14 +57,13 @@ function callback(res, logFile) {
       const req = https.request(getPostOptions("presence"), (res) => {
         console.log("[COVID]: statusCode:", res.statusCode);
       });
-
       const req2 = https.request(getPostOptions("nokia"), (res) => {
         console.log("[COVID]: statusCode:", res.statusCode);
       });
       req.on("error", (e) => {
         console.error(e);
       });
-      req.write(getsendRequest(covidData));
+      req.write(getsendRequest(covidData, delta));
       req.end();
       req2.on("error", (e) => {
         console.error(e);
@@ -76,9 +83,6 @@ function covid({delay, logFile}) {
   sendRequest(options)
     .then(res => callback(res, logFile))
     .catch((err) => timestampLog(`[COVID]: ${err}`))
-    .finally(() => {
-      timestampLog(`[COVID]: Next run in ${delay}ms`);
-    });
   setTimeout(function () {
     covid({ delay, logFile });
   }, delay);
