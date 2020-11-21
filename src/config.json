@@ -48,5 +48,12 @@
   "steamgifts": {
     "allowed": true,
     "delay": 300000
+  },
+  "watcher": {
+    "allowed": true,
+    "delay": 20000,
+    "config": [
+      {"name": "raspberry", "jofogas": true, "hardverapro": true}
+    ]
   }
 }

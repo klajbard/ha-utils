@@ -8,6 +8,7 @@ const { readDht } = require("./dht");
 const { steamgifts } = require("./steamgift");
 const { fixer } = require("./fixer");
 const { covid } = require("./covid");
+const { watcher } = require("./watcher");
 const config = require("./config.json");
 
 const ncore_user = {
@@ -54,4 +55,5 @@ const fixer_api = process.env.FIXERAPI;
       target: config.fixer.target,
     });
   config.covid.allowed && covid({delay: config.covid.delay, logFile: config.covid.logFile})
+  config.watcher.allowed && watcher({delay: config.watcher.delay, config: config.watcher.config})
 })();
