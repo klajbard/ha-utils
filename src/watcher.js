@@ -48,7 +48,6 @@ function callback(body, { logFile, query }) {
     } else if (err) {
       console.log(err);
     }
-    timestampLog(`[WATCHER]: Checking if new data is posted`);
     const oldItems = data && data.toString() ? JSON.parse(data.toString()) : [];
     let newItems = [];
     // console.log(oldItems)
@@ -90,7 +89,6 @@ function callback(body, { logFile, query }) {
 }
 
 function watcher({ delay = 60000, config }) {
-  timestampLog(`[WATCHER]: Querying...`);
   if (!config.length) return;
   config.forEach((item) => {
     if (item.jofogas) {
