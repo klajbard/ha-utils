@@ -54,6 +54,8 @@ const fixer_api = process.env.FIXERAPI;
       base: config.fixer.base,
       target: config.fixer.target,
     });
-  config.covid.allowed && covid({delay: config.covid.delay, logFile: config.covid.logFile})
-  config.watcher.allowed && watcher({delay: config.watcher.delay, config: config.watcher.config})
+  config.covid.allowed &&
+    covid({ delay: config.covid.delay, logFile: config.covid.logFile });
+  config.watcher.allowed &&
+    watcher({ delay: config.watcher.delay, config: config.watcher.config });
 })();

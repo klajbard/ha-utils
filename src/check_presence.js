@@ -2,7 +2,12 @@
 
 const https = require("https");
 const { JSDOM } = require("jsdom");
-const { sendRequest, getPostOptions, timestampLog, url2options } = require("./utils");
+const {
+  sendRequest,
+  getPostOptions,
+  timestampLog,
+  url2options,
+} = require("./utils");
 
 function callback(url, callbackLogic) {
   return function (body) {
@@ -33,13 +38,13 @@ function callback(url, callbackLogic) {
 }
 
 function check_presence({ delay = 60000, url, callbackLogic }) {
-  timestampLog(`[CHECK_PRESENCE]: Querying...`)
-  const { host, path } = url2options(url)
+  timestampLog(`[CHECK_PRESENCE]: Querying...`);
+  const { host, path } = url2options(url);
   const options = {
     host,
     path,
-    method: "GET"
-  }
+    method: "GET",
+  };
   sendRequest(options)
     .then(callback(url, callbackLogic))
     .catch((err) => timestampLog(`[CHECK_PRESENCE]: ${err}`))

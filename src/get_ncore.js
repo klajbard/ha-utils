@@ -14,13 +14,9 @@ const mapHun = [
   "ncore_hitnrun_possible",
   "ncore_hitnrun_month",
   "ncore_possible_hit_n_run",
-]
+];
 
-const needed = [
-  "ncore_possible_hit_n_run",
-  "ncore_daily_rank",
-  "ncore_active",
-]
+const needed = ["ncore_possible_hit_n_run", "ncore_daily_rank", "ncore_active"];
 
 function callback(body) {
   const dom = new JSDOM(body);
@@ -37,10 +33,10 @@ function callback(body) {
           state: data[mapHun[i]],
           attributes: {
             friendly_name: definitions[i].innerHTML.slice(0, -1),
-            icon: "mdi:server-network"
-          }
-        }
-        setState({sensor: `sensor.${mapHun[i]}`, payload})
+            icon: "mdi:server-network",
+          },
+        };
+        setState({ sensor: `sensor.${mapHun[i]}`, payload });
       }
     }
   }
@@ -55,7 +51,7 @@ function getRequestOptions(cookie) {
     method: "GET",
     headers: {
       "User-Agent": "curl/7.37.0",
-      "Cookie": `PHPSESSID=${cookie}`,
+      Cookie: `PHPSESSID=${cookie}`,
     },
   };
 }

@@ -46,10 +46,10 @@ function sendCost(cost) {
     attributes: {
       friendly_name: "AWS monthly cost",
       unit_of_measurement: "$",
-      icon: "mdi:currency-usd"
-    }
-  }
-  setState({sensor: `sensor.aws_monthly_cost`, payload})
+      icon: "mdi:currency-usd",
+    },
+  };
+  setState({ sensor: `sensor.aws_monthly_cost`, payload });
 }
 
 function getCost(logFile) {
@@ -75,16 +75,19 @@ function getCost(logFile) {
         ]["Amount"];
         fs.promises.writeFile(logFile, cost).then(() => {
           resolve(`[AWSCOST]: Updated cost to ${cost}`);
-          sendCost(cost)
+          sendCost(cost);
         });
       });
     } else {
-      fs.promises.readFile(logFile, "utf-8").then(function(data) {
-        sendCost(data)
-        resolve(`[AWSCOST]: Updated cost to ${data}`);
-      }).catch(function(err) {
-        reject(err);
-      })
+      fs.promises
+        .readFile(logFile, "utf-8")
+        .then(function (data) {
+          sendCost(data);
+          resolve(`[AWSCOST]: Updated cost to ${data}`);
+        })
+        .catch(function (err) {
+          reject(err);
+        });
       timestampLog(`[AWSCOST]: Cost was recently updated.`);
     }
   });

@@ -28,10 +28,10 @@ function generateRequest(param, payload, protocol) {
 }
 
 function sendRequest(param, payload) {
-  return generateRequest(param, payload)
+  return generateRequest(param, payload);
 }
 function sendRequestHttp(param, payload) {
-  return generateRequest(param, payload, "http")
+  return generateRequest(param, payload, "http");
 }
 
 module.exports = {

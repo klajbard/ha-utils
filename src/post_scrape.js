@@ -3,7 +3,12 @@
 const https = require("https");
 const fs = require("fs");
 const { JSDOM } = require("jsdom");
-const { sendRequest, getPostOptions, timestampLog, url2options } = require("./utils");
+const {
+  sendRequest,
+  getPostOptions,
+  timestampLog,
+  url2options,
+} = require("./utils");
 
 function getsendRequest(data, url) {
   return JSON.stringify({
@@ -46,12 +51,12 @@ function callback(body, { url, query, logFile }) {
 
 function scraper({ delay = 60000, url, query, logFile }) {
   timestampLog(`[POST_SCRAPE]: Querying...`);
-  const { host, path } = url2options(url)
+  const { host, path } = url2options(url);
   const options = {
     host,
     path,
-    method: "GET"
-  }
+    method: "GET",
+  };
   sendRequest(options)
     .then((body) => callback(body, { url, query, logFile }))
     .catch((err) => console.log(err))

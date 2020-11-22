@@ -19,19 +19,19 @@ function callback(res) {
     attributes: {
       friendly_name: "RPI DHT temperature",
       unit_of_measurement: "°C",
-      device_class: "temperature"
-    }
-  }
+      device_class: "temperature",
+    },
+  };
   const payloadHum = {
     state: round(humidity),
     attributes: {
       friendly_name: "RPI DHT humidity",
       unit_of_measurement: "%",
-      device_class: "humidity"
-    }
-  }
-  setState({sensor: 'sensor.rpi_temperature', payload: payloadTemp})
-  setState({sensor: 'sensor.rpi_humidity', payload: payloadHum})
+      device_class: "humidity",
+    },
+  };
+  setState({ sensor: "sensor.rpi_temperature", payload: payloadTemp });
+  setState({ sensor: "sensor.rpi_humidity", payload: payloadHum });
   timestampLog(`[DHT]: ${round(temperature)}°C ${round(humidity)}%`);
 }
 

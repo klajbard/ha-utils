@@ -52,8 +52,6 @@
   "watcher": {
     "allowed": true,
     "delay": 20000,
-    "config": [
-      {"name": "raspberry", "jofogas": true, "hardverapro": true}
-    ]
+    "config": [{ "name": "raspberry", "jofogas": true, "hardverapro": true }]
   }
 }

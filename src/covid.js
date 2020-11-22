@@ -1,7 +1,7 @@
 "use strict";
 
 const https = require("https");
-const fs = require("fs")
+const fs = require("fs");
 const { JSDOM } = require("jsdom");
 const { sendRequest, getPostOptions, timestampLog } = require("./utils");
 
@@ -22,17 +22,29 @@ function getSum(data) {
 function callback(res, logFile) {
   const dom = new JSDOM(res);
   const divAPI = dom.window.document.querySelector("#numbers-API");
-  const fertozottPest = divAPI.querySelector("#api-fertozott-pest").innerHTML.replace(" ", "")
-  const fertozottVidek = divAPI.querySelector("#api-fertozott-videk").innerHTML.replace(" ", "")
-  const elhunytPest = divAPI.querySelector("#api-elhunyt-pest").innerHTML.replace(" ", "")
-  const elhunytVidek = divAPI.querySelector("#api-elhunyt-videk").innerHTML.replace(" ", "")
-  const gyogyultPest = divAPI.querySelector("#api-gyogyult-pest").innerHTML.replace(" ", "")
-  const gyogyultVidek = divAPI.querySelector("#api-gyogyult-videk").innerHTML.replace(" ", "")
+  const fertozottPest = divAPI
+    .querySelector("#api-fertozott-pest")
+    .innerHTML.replace(" ", "");
+  const fertozottVidek = divAPI
+    .querySelector("#api-fertozott-videk")
+    .innerHTML.replace(" ", "");
+  const elhunytPest = divAPI
+    .querySelector("#api-elhunyt-pest")
+    .innerHTML.replace(" ", "");
+  const elhunytVidek = divAPI
+    .querySelector("#api-elhunyt-videk")
+    .innerHTML.replace(" ", "");
+  const gyogyultPest = divAPI
+    .querySelector("#api-gyogyult-pest")
+    .innerHTML.replace(" ", "");
+  const gyogyultVidek = divAPI
+    .querySelector("#api-gyogyult-videk")
+    .innerHTML.replace(" ", "");
   const covidData = {
     fertozott: parseInt(fertozottPest) + parseInt(fertozottVidek),
     elhunyt: parseInt(elhunytPest) + parseInt(elhunytVidek),
-    gyogyult: parseInt(gyogyultPest) + parseInt(gyogyultVidek)
-  }
+    gyogyult: parseInt(gyogyultPest) + parseInt(gyogyultVidek),
+  };
   if (!process.env.SLACK_SCRAPER) {
     timestampLog(`[COVID]: No Slack API given.`);
     timestampLog(`[COVID]: ${data}`);
@@ -44,8 +56,8 @@ function callback(res, logFile) {
     } else if (err) {
       console.log(err);
     }
-    const fertozottekElozo = getSum(covidData)
-    const fertozottekFriss = getSum(JSON.parse(data.toString()))
+    const fertozottekElozo = getSum(covidData);
+    const fertozottekFriss = getSum(JSON.parse(data.toString()));
     const delta = Math.abs(fertozottekFriss - fertozottekElozo);
     if (!data || JSON.stringify(covidData) !== data.toString()) {
       fs.writeFile(logFile, JSON.stringify(covidData), function (err) {
@@ -73,17 +85,17 @@ function callback(res, logFile) {
   });
 }
 
-function covid({delay, logFile}) {
+function covid({ delay, logFile }) {
   const options = {
     host: "koronavirus.gov.hu",
-    method: "GET"
-  }
+    method: "GET",
+  };
   sendRequest(options)
-    .then(res => callback(res, logFile))
-    .catch((err) => timestampLog(`[COVID]: ${err}`))
+    .then((res) => callback(res, logFile))
+    .catch((err) => timestampLog(`[COVID]: ${err}`));
   setTimeout(function () {
     covid({ delay, logFile });
   }, delay);
 }
 
-module.exports = { covid }
+module.exports = { covid };

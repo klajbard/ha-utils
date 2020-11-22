@@ -16,10 +16,10 @@ function calculateCurrency(rates, baseList = [], target) {
       attributes: {
         friendly_name: targetCurrency,
         unit_of_measurement: target,
-        icon: `mdi:currency-${targetCurrency.toLowerCase()}`
-      }
-    }
-    setState({sensor: `sensor.${targetCurrency.toLowerCase()}`, payload})
+        icon: `mdi:currency-${targetCurrency.toLowerCase()}`,
+      },
+    };
+    setState({ sensor: `sensor.${targetCurrency.toLowerCase()}`, payload });
   });
   return response;
 }
@@ -30,9 +30,9 @@ function fixer({ delay = 60000, api = "", base, target }) {
     path: `/api/latest?access_key=${api}&base=EUR`,
     method: "GET",
     headers: {
-      "Content-type": "application/json"
+      "Content-type": "application/json",
     },
-  }
+  };
 
   sendRequestHttp(options)
     .then(function (resp) {

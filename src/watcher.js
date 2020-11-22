@@ -8,10 +8,10 @@ const { sendRequest, getPostOptions, timestampLog } = require("./utils");
 function getsendRequest(newItems) {
   return JSON.stringify({
     text: newItems.reduce((acc, item) => {
-      acc += `*${item.name} - ${item.price}*\n${item.url}\n`
+      acc += `*${item.name} - ${item.price}*\n${item.url}\n`;
       return acc;
-    }, "")
-  })
+    }, ""),
+  });
 }
 
 function getJofogasLink(name) {
@@ -19,21 +19,21 @@ function getJofogasLink(name) {
 }
 
 function getHardveraprolink(name) {
-  return `https://hardverapro.hu/aprok/keres.php?stext=${name}`
+  return `https://hardverapro.hu/aprok/keres.php?stext=${name}`;
 }
 
 const queryHardverapro = {
   count: ".list-unstyled li h3",
   item: ".media",
   titleLink: ".uad-title a",
-  price: ".uad-price"
-}
+  price: ".uad-price",
+};
 
 const queryJofogas = {
   item: ".general-item",
   titleLink: ".subject",
-  price: ".price-value"
-}
+  price: ".price-value",
+};
 
 function callback(body, { logFile, query }) {
   const dom = new JSDOM(body);
@@ -50,25 +50,27 @@ function callback(body, { logFile, query }) {
     }
     timestampLog(`[WATCHER]: Checking if new data is posted`);
     const oldItems = data && data.toString() ? JSON.parse(data.toString()) : [];
-    let newItems = []
+    let newItems = [];
+    // console.log(oldItems)
     itemsDOM.forEach((item) => {
-      const nameDOM = item.querySelector(query.titleLink)
-      const name = nameDOM.textContent.trim()
-      const url = nameDOM.href.trim()
-      const price = item.querySelector(query.price).textContent.trim()
+      const nameDOM = item.querySelector(query.titleLink);
+      const name = nameDOM.textContent.trim();
+      const url = nameDOM.href.trim();
+      const price = item.querySelector(query.price).textContent.trim();
       if (!oldItems.length) {
         timestampLog(`[WATCHER]: New item: ${name}.`);
-        newItems.push({name, url, price})
+        newItems.push({ name, url, price });
       } else {
-        oldItems.forEach((oldItem) => {
-          if (oldItem.name === item.name && oldItem.price === item.price) {
-            newItems.push({name, url, price})
-          }
-        })
+        const isPresent = oldItems.find((oldItem) => {
+          return (oldItem.name === name || oldItem.price === price)
+        });
+        if (!isPresent) {
+          newItems.push({ name, url, price });
+        }
       }
-    })
+    });
     if (newItems.length) {
-      const text = JSON.stringify([...newItems, ...oldItems])
+      const text = JSON.stringify([...newItems, ...oldItems]);
       fs.writeFile(logFile, text, function (err) {
         if (err) {
           console.log(err);
@@ -90,20 +92,30 @@ function callback(body, { logFile, query }) {
 function watcher({ delay = 60000, config }) {
   timestampLog(`[WATCHER]: Querying...`);
   if (!config.length) return;
-  config.forEach(item => {
-    if(item.jofogas) {
-      const urlJofogas = getJofogasLink(item.name)
+  config.forEach((item) => {
+    if (item.jofogas) {
+      const urlJofogas = getJofogasLink(item.name);
       sendRequest(urlJofogas)
-        .then((body) => callback(body, { logFile: `./log/${item.name}_jofogas`, query: queryJofogas }))
-        .catch((err) => console.log(err))
+        .then((body) =>
+          callback(body, {
+            logFile: `./log/${item.name}_jofogas`,
+            query: queryJofogas,
+          })
+        )
+        .catch((err) => console.log(err));
     }
-    if(item.hardverapro) {
-      const urlHardverapro = getHardveraprolink(item.name)
+    if (item.hardverapro) {
+      const urlHardverapro = getHardveraprolink(item.name);
       sendRequest(urlHardverapro)
-        .then((body) => callback(body, { logFile: `./log/${item.name}_hardverapro`, query: queryHardverapro }))
-        .catch((err) => console.log(err))
+        .then((body) =>
+          callback(body, {
+            logFile: `./log/${item.name}_hardverapro`,
+            query: queryHardverapro,
+          })
+        )
+        .catch((err) => console.log(err));
     }
-    
+
     setTimeout(function () {
       watcher({ delay, config });
     }, delay);
