@@ -18,7 +18,6 @@ function callback(url, callbackLogic) {
     }
 
     const dom = new JSDOM(body);
-    timestampLog(`[CHECK_PRESENCE]: Processing data...`);
     if (callbackLogic(dom)) {
       if (!process.env.SLACK_PRESENCE) {
         timestampLog(`[CHECK_PRESENCE]: No Slack API given.`);
@@ -38,7 +37,6 @@ function callback(url, callbackLogic) {
 }
 
 function check_presence({ delay = 60000, url, callbackLogic }) {
-  timestampLog(`[CHECK_PRESENCE]: Querying...`);
   const { host, path } = url2options(url);
   const options = {
     host,
@@ -49,7 +47,6 @@ function check_presence({ delay = 60000, url, callbackLogic }) {
     .then(callback(url, callbackLogic))
     .catch((err) => timestampLog(`[CHECK_PRESENCE]: ${err}`))
     .finally(() => {
-      timestampLog(`[CHECK_PRESENCE]: Next run in ${delay}ms`);
     });
   setTimeout(function () {
     check_presence({ delay, url, callbackLogic });

@@ -25,12 +25,12 @@
     "delay": 7200000
   },
   "presence": {
-    "allowed": false,
+    "allowed": true,
     "delay": 5000,
     "queries": [
       {
-        "url": "https://edigital.hu/hordozhato-hangfal/mac-audio-bt-wild-201-vizallo-bluetooth-hangszoro-fekete-p506897",
-        "query": ".cart-wrapper"
+        "url": "https://www.philips.hu/c-p/QP220_50/oneblade-cserelhetoe-penge",
+        "query": ".p-p01v2__shop-delivery-time:not(.p-hidden)"
       }
     ]
   },
