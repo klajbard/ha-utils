@@ -53,10 +53,11 @@ function callback(body, { logFile, query }) {
     // console.log(oldItems)
     itemsDOM.forEach((item) => {
       const nameDOM = item.querySelector(query.titleLink);
-      if(!nameDOM) return;
+      const priceDOM = item.querySelector(query.price);
+      if(!nameDOM || !priceDOM) return;
       const name = nameDOM.textContent.trim();
       const url = nameDOM.href.trim();
-      const price = item.querySelector(query.price).textContent.trim();
+      const price = priceDOM.textContent.trim();
       if (!oldItems.length) {
         timestampLog(`[WATCHER]: New item: ${name}.`);
         newItems.push({ name, url, price });
