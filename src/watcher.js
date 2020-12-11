@@ -53,6 +53,7 @@ function callback(body, { logFile, query }) {
     // console.log(oldItems)
     itemsDOM.forEach((item) => {
       const nameDOM = item.querySelector(query.titleLink);
+      if(!nameDOM) return;
       const name = nameDOM.textContent.trim();
       const url = nameDOM.href.trim();
       const price = item.querySelector(query.price).textContent.trim();
