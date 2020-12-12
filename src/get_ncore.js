@@ -56,21 +56,14 @@ function getRequestOptions(cookie) {
   };
 }
 
-function get_ncore({ delay = 60000, user = { username: "", password: "" } }) {
+async function get_ncore(user = { username: "", password: "" }) {
   const command = `curl -F "nev=${user.username}" -F "pass=${user.password}" https://ncore.cc/login.php  -c - | grep -oP "(?<=PHPSESSID\\t).*?$" | tr -d "\\n"`;
-  exec(command, (err, stdout, stderr) => {
+  exec(command, async (err, stdout, stderr) => {
     const cookie = stdout;
     if (err) return console.error(err);
     timestampLog(`[NCORE]: Querying...`);
-    sendRequest(getRequestOptions(cookie))
-      .then(callback)
-      .catch((err) => timestampLog(`[NCORE]: ${err}`))
-      .finally(() => {
-        timestampLog(`[NCORE]: Next run in ${delay}ms`);
-      });
-    setTimeout(function () {
-      get_ncore({ delay, user });
-    }, delay);
+    const body = await sendRequest(getRequestOptions(cookie));
+    callback(body);
   });
 }
 

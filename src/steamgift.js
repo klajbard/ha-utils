@@ -1,6 +1,7 @@
 const { timestampLog, sendRequest } = require("./utils");
 
-function join_recent(sessionId) {
+function steamgifts(sessionId) {
+  timestampLog(`[SG]: Querying...`);
   const cookie = `PHPSESSID=${sessionId}`;
 
   const get_options = {
@@ -38,14 +39,6 @@ function join_recent(sessionId) {
       timestampLog(`[SG]: ${resp}`);
     });
   });
-}
-
-function steamgifts({ delay = 60000, sessionId = "" }) {
-  join_recent(sessionId);
-  timestampLog(`[SG]: Next run in ${delay}ms`);
-  setTimeout(function () {
-    steamgifts({ delay, sessionId });
-  }, delay);
 }
 
 module.exports = {

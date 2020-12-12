@@ -52,58 +52,44 @@ function sendCost(cost) {
   setState({ sensor: `sensor.aws_monthly_cost`, payload });
 }
 
-function getCost(logFile) {
+async function getAWSCost(logFile) {
+  timestampLog(`[AWSCOST]: Querying...`);
   const today = new Date();
   const currentMonth = getMonth(today);
   const nextMonth = getMonth(
     new Date(new Date().setMonth(new Date().getMonth() + 1))
   );
   const command = `aws ce get-cost-and-usage --time-period Start=${currentMonth}-01,End=${nextMonth}-01 --granularity MONTHLY --metrics "BlendedCost"`;
-  return new Promise(async (resolve, reject) => {
-    const { isPresent, err } = await isFilePresent(logFile);
-    if (err) {
-      reject(err);
-    }
-    if (!isPresent) {
-      timestampLog(`[AWSCOST]: ${logFile} is not found, creating...`);
-      fs.writeFileSync(logFile, "");
-    }
-    if (today - fs.statSync(logFile).mtime > FILE_VALID_TIME || !isPresent) {
-      execShellCommand(command).then((output) => {
-        const cost = JSON.parse(output)["ResultsByTime"][0]["Total"][
-          "BlendedCost"
-        ]["Amount"];
-        fs.promises.writeFile(logFile, cost).then(() => {
-          resolve(`[AWSCOST]: Updated cost to ${cost}`);
-          sendCost(cost);
-        });
+  const { isPresent, err } = await isFilePresent(logFile);
+  if (err) {
+    throw new Error(err);
+  }
+  if (!isPresent) {
+    timestampLog(`[AWSCOST]: ${logFile} is not found, creating...`);
+    fs.writeFileSync(logFile, "");
+  }
+  if (today - fs.statSync(logFile).mtime > FILE_VALID_TIME || !isPresent) {
+    execShellCommand(command).then((output) => {
+      const cost = JSON.parse(output)["ResultsByTime"][0]["Total"][
+        "BlendedCost"
+      ]["Amount"];
+      fs.promises.writeFile(logFile, cost).then(() => {
+        timestampLog(`[AWSCOST]: Updated cost to ${cost}`);
+        sendCost(cost);
       });
-    } else {
-      fs.promises
-        .readFile(logFile, "utf-8")
-        .then(function (data) {
-          sendCost(data);
-          resolve(`[AWSCOST]: Updated cost to ${data}`);
-        })
-        .catch(function (err) {
-          reject(err);
-        });
-      timestampLog(`[AWSCOST]: Cost was recently updated.`);
-    }
-  });
-}
-
-function getAWSCost({ delay = 60000, logFile }) {
-  timestampLog(`[AWSCOST]: Querying...`);
-  getCost(logFile)
-    .then((msg) => timestampLog(msg))
-    .catch((err) => timestampLog(`[AWSCOST]: ${err}`))
-    .finally(() => {
-      timestampLog(`[AWSCOST]: Next run in ${delay}ms`);
     });
-  setTimeout(function () {
-    getAWSCost({ delay, logFile });
-  }, delay);
+  } else {
+    fs.promises
+      .readFile(logFile, "utf-8")
+      .then(function (data) {
+        sendCost(data);
+        timestampLog(`[AWSCOST]: Updated cost to ${data}`);
+      })
+      .catch(function (err) {
+        throw new Error(err);
+      });
+    timestampLog(`[AWSCOST]: Cost was recently updated.`);
+  }
 }
 
 module.exports = {

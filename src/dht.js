@@ -12,7 +12,9 @@ function readFromPin(pin) {
   });
 }
 
-function callback(res) {
+async function readDht(pin) {
+  timestampLog(`[DHT]: Querying...`);
+  const res = await readFromPin(pin);
   const { temperature, humidity } = res;
   const payloadTemp = {
     state: round(temperature),
@@ -33,14 +35,6 @@ function callback(res) {
   setState({ sensor: "sensor.rpi_temperature", payload: payloadTemp });
   setState({ sensor: "sensor.rpi_humidity", payload: payloadHum });
   timestampLog(`[DHT]: ${round(temperature)}°C ${round(humidity)}%`);
-}
-
-function readDht({ delay = 10000, pin }) {
-  readFromPin(pin)
-    .then(callback)
-    .catch((err) => timestampLog(`[DHT]: ${err}`))
-    .finally(() => timestampLog(`[DHT]: Next run in ${delay}ms`));
-  setTimeout(() => readDht({ delay, pin }), delay);
 }
 
 module.exports = {

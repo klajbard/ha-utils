@@ -16,7 +16,15 @@ function getsendRequest(data, url) {
   });
 }
 
-function callback(body, { url, query, logFile }) {
+async function scraper(url, query, logFile) {
+  timestampLog(`[POST_SCRAPE]: Querying...`);
+  const { host, path } = url2options(url);
+  const options = {
+    host,
+    path,
+    method: "GET",
+  };
+  const body = await sendRequest(options);
   const dom = new JSDOM(body);
   const text = dom.window.document.querySelector(query).innerHTML;
   if (!process.env.SLACK_SCRAPER) {
@@ -47,25 +55,6 @@ function callback(body, { url, query, logFile }) {
       req.end();
     }
   });
-}
-
-function scraper({ delay = 60000, url, query, logFile }) {
-  timestampLog(`[POST_SCRAPE]: Querying...`);
-  const { host, path } = url2options(url);
-  const options = {
-    host,
-    path,
-    method: "GET",
-  };
-  sendRequest(options)
-    .then((body) => callback(body, { url, query, logFile }))
-    .catch((err) => console.log(err))
-    .finally(() => {
-      timestampLog(`[POST_SCRAPE]: Next run in ${delay}ms`);
-    });
-  setTimeout(function () {
-    scraper({ delay, url, query, logFile });
-  }, delay);
 }
 
 module.exports = {

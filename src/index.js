@@ -11,51 +11,79 @@ const { covid } = require("./covid");
 const { watcher } = require("./watcher");
 const config = require("./config.json");
 
+const sg_session = process.env.SG_SESSID;
+const fixer_api = process.env.FIXERAPI;
 const ncore_user = {
   username: process.env.NCORE_USERNAME,
   password: process.env.NCORE_PASSWORD,
 };
 
-const sg_session = process.env.SG_SESSID;
+(async function () {
+  const tick = 5000;
 
-const fixer_api = process.env.FIXERAPI;
-
-(function () {
-  function callbackLogic(dom) {
-    const elem = dom.window.document.querySelector(
-      config.presence.queries[0].query
-    );
-    return elem && !!elem.children.length;
+  async function delay() {
+    return new Promise(function (resolve) {
+      setTimeout(resolve, tick);
+    });
   }
 
-  config.presence.allowed &&
-    check_presence({
-      delay: config.presence.delay,
-      url: config.presence.queries[0].url,
-      callbackLogic,
-    });
-  config.aws.allowed &&
-    getAWSCost({ delay: config.aws.delay, logFile: config.aws.logFile });
-  config.scraper.allowed &&
-    scraper({
-      delay: config.scraper.delay,
-      ...config.scraper.queries[0],
-    });
-  config.ncore.allowed &&
-    get_ncore({ delay: config.ncore.delay, user: ncore_user });
-  config.dht.allowed &&
-    readDht({ delay: config.dht.delay, pin: config.dht.pin });
-  config.steamgifts.allowed &&
-    steamgifts({ delay: config.steamgifts.delay, sessionId: sg_session });
-  config.fixer.allowed &&
-    fixer({
-      delay: config.fixer.delay,
-      api: fixer_api,
-      base: config.fixer.base,
-      target: config.fixer.target,
-    });
-  config.covid.allowed &&
-    covid({ delay: config.covid.delay, logFile: config.covid.logFile });
-  config.watcher.allowed &&
-    watcher({ delay: config.watcher.delay, config: config.watcher.config });
+  async function execute(counter) {
+    function shouldRun(delay) {
+      return (counter * tick) % delay === 0;
+    }
+
+    function callbackLogic(dom) {
+      const elem = dom.window.document.querySelector(
+        config.presence.queries[0].query
+      );
+      return elem && !!elem.children.length;
+    }
+
+    shouldRun(config.presence.delay) &&
+      config.presence.allowed &&
+      check_presence(config.presence.queries[0].url, callbackLogic);
+
+    shouldRun(config.aws.delay) &&
+      config.aws.allowed &&
+      getAWSCost(config.aws.logFile);
+
+    shouldRun(config.scraper.delay) &&
+      config.scraper.allowed &&
+      scraper(
+        config.scraper.queries[0].url,
+        config.scraper.queries[0].query,
+        config.scraper.queries[0].logFile
+      );
+
+    shouldRun(config.ncore.delay) &&
+      config.ncore.allowed &&
+      get_ncore(ncore_user);
+
+    shouldRun(config.dht.delay) &&
+      config.dht.allowed &&
+      readDht(config.dht.pin);
+
+    shouldRun(config.steamgifts.delay) &&
+      config.steamgifts.allowed &&
+      steamgifts(sg_session);
+
+    shouldRun(config.fixer.delay) &&
+      config.fixer.allowed &&
+      fixer(fixer_api, config.fixer.base, config.fixer.target);
+
+    shouldRun(config.covid.delay) &&
+      config.covid.allowed &&
+      covid(config.covid.logFile);
+
+    shouldRun(config.watcher.delay) &&
+      config.watcher.allowed &&
+      watcher(config.watcher.config);
+  }
+
+  let counter = 0;
+  while (true) {
+    execute(counter);
+    await delay(tick);
+    counter++;
+  }
 })();

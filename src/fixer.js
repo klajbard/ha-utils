@@ -24,7 +24,8 @@ function calculateCurrency(rates, baseList = [], target) {
   return response;
 }
 
-function fixer({ delay = 60000, api = "", base, target }) {
+async function fixer(api = "", base, target) {
+  timestampLog(`[FIXER]: Querying...`);
   const options = {
     host: "data.fixer.io",
     path: `/api/latest?access_key=${api}&base=EUR`,
@@ -34,21 +35,11 @@ function fixer({ delay = 60000, api = "", base, target }) {
     },
   };
 
-  sendRequestHttp(options)
-    .then(function (resp) {
-      const respJSON = JSON.parse(resp);
-      if (!respJSON.success) return Promise.reject(resp);
-      const data = calculateCurrency(respJSON.rates, base, target);
-      timestampLog(`[FIXER] ${JSON.stringify(data)}`);
-    })
-    .catch(function (err) {
-      timestampLog(`[FIXER] ${err}`);
-    })
-    .finally(function () {
-      setTimeout(function () {
-        fixer({ delay, api, base, target });
-      }, delay);
-    });
+  const resp = await sendRequestHttp(options);
+  const respJSON = JSON.parse(resp);
+  if (!respJSON.success) return Promise.reject(resp);
+  const data = calculateCurrency(respJSON.rates, base, target);
+  timestampLog(`[FIXER] ${JSON.stringify(data)}`);
 }
 
 module.exports = {

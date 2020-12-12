@@ -19,7 +19,13 @@ function getSum(data) {
   }, 0);
 }
 
-function callback(res, logFile) {
+async function covid(logFile) {
+  timestampLog(`[COVID]: Querying...`);
+  const options = {
+    host: "koronavirus.gov.hu",
+    method: "GET",
+  };
+  const res = await sendRequest(options);
   const dom = new JSDOM(res);
   const divAPI = dom.window.document.querySelector("#numbers-API");
   const fertozottPest = divAPI
@@ -83,19 +89,6 @@ function callback(res, logFile) {
       req2.end();
     }
   });
-}
-
-function covid({ delay, logFile }) {
-  const options = {
-    host: "koronavirus.gov.hu",
-    method: "GET",
-  };
-  sendRequest(options)
-    .then((res) => callback(res, logFile))
-    .catch((err) => timestampLog(`[COVID]: ${err}`));
-  setTimeout(function () {
-    covid({ delay, logFile });
-  }, delay);
 }
 
 module.exports = { covid };

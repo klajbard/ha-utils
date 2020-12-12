@@ -50,11 +50,10 @@ function callback(body, { logFile, query }) {
     }
     const oldItems = data && data.toString() ? JSON.parse(data.toString()) : [];
     let newItems = [];
-    // console.log(oldItems)
     itemsDOM.forEach((item) => {
       const nameDOM = item.querySelector(query.titleLink);
       const priceDOM = item.querySelector(query.price);
-      if(!nameDOM || !priceDOM) return;
+      if (!nameDOM || !priceDOM) return;
       const name = nameDOM.textContent.trim();
       const url = nameDOM.href.trim();
       const price = priceDOM.textContent.trim();
@@ -63,7 +62,7 @@ function callback(body, { logFile, query }) {
         newItems.push({ name, url, price });
       } else {
         const isPresent = oldItems.find((oldItem) => {
-          return (oldItem.name === name || oldItem.price === price)
+          return oldItem.name === name || oldItem.price === price;
         });
         if (!isPresent) {
           newItems.push({ name, url, price });
@@ -90,35 +89,26 @@ function callback(body, { logFile, query }) {
   });
 }
 
-function watcher({ delay = 60000, config }) {
+function watcher(config) {
+  // timestampLog(`[WATCHER]: Querying...`);
   if (!config.length) return;
-  config.forEach((item) => {
+  config.forEach(async (item) => {
     if (item.jofogas) {
       const urlJofogas = getJofogasLink(item.name);
-      sendRequest(urlJofogas)
-        .then((body) =>
-          callback(body, {
-            logFile: `./log/${item.name}_jofogas`,
-            query: queryJofogas,
-          })
-        )
-        .catch((err) => console.log(err));
+      const body = await sendRequest(urlJofogas);
+      callback(body, {
+        logFile: `./log/${item.name}_jofogas`,
+        query: queryJofogas,
+      });
     }
     if (item.hardverapro) {
       const urlHardverapro = getHardveraprolink(item.name);
-      sendRequest(urlHardverapro)
-        .then((body) =>
-          callback(body, {
-            logFile: `./log/${item.name}_hardverapro`,
-            query: queryHardverapro,
-          })
-        )
-        .catch((err) => console.log(err));
+      const body = await sendRequest(urlHardverapro);
+      callback(body, {
+        logFile: `./log/${item.name}_hardverapro`,
+        query: queryHardverapro,
+      });
     }
-
-    setTimeout(function () {
-      watcher({ delay, config });
-    }, delay);
   });
 }
 
