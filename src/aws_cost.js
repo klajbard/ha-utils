@@ -2,20 +2,9 @@
 
 const fs = require("fs");
 const exec = require("child_process").exec;
-const { round, setState, timestampLog } = require("./utils");
+const { execShellCommand, round, setState, timestampLog } = require("./utils");
 
 const FILE_VALID_TIME = 1000 * 60 * 60 * 24 * 4; // 4 days
-
-function execShellCommand(command) {
-  return new Promise((resolve, reject) => {
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        console.warn(error);
-      }
-      resolve(stdout ? stdout : stderr);
-    });
-  });
-}
 
 function getMonth(today) {
   const year = today.getFullYear();
@@ -83,7 +72,7 @@ async function getAWSCost(logFile) {
       .readFile(logFile, "utf-8")
       .then(function (data) {
         sendCost(data);
-        timestampLog(`[AWSCOST]: Updated cost to ${data}`);
+        timestampLog(`[AWSCOST]: Cost is ${data}`);
       })
       .catch(function (err) {
         throw new Error(err);

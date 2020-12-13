@@ -15,6 +15,4 @@ function getPostOptions(channel) {
   };
 }
 
-module.exports = {
-  getPostOptions,
-};
+module.exports = getPostOptions;

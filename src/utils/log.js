@@ -12,6 +12,4 @@ function timestampLog(text) {
   console.log(`\x1b[36m${formatted_date}\x1b[0m: ${text}`);
 }
 
-module.exports = {
-  timestampLog,
-};
+module.exports = timestampLog;

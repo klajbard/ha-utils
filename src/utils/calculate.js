@@ -5,6 +5,4 @@ function round(number, decimals = 2) {
   );
 }
 
-module.exports = {
-  round,
-};
+module.exports = round;

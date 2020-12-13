@@ -4,6 +4,4 @@ function url2options(url) {
   return { host: match[4], path: match[5] };
 }
 
-module.exports = {
-  url2options,
-};
+module.exports = url2options;

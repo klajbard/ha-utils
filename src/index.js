@@ -27,16 +27,16 @@ const ncore_user = {
     });
   }
 
+  function callbackLogic(dom) {
+    const elem = dom.window.document.querySelector(
+      config.presence.queries[0].query
+    );
+    return elem && !!elem.children.length;
+  }
+
   async function execute(counter) {
     function shouldRun(delay) {
       return (counter * tick) % delay === 0;
-    }
-
-    function callbackLogic(dom) {
-      const elem = dom.window.document.querySelector(
-        config.presence.queries[0].query
-      );
-      return elem && !!elem.children.length;
     }
 
     shouldRun(config.presence.delay) &&
