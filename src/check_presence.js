@@ -2,12 +2,11 @@
 
 const https = require("https");
 const { JSDOM } = require("jsdom");
-const {
-  sendRequest,
-  getPostOptions,
-  timestampLog,
-  url2options,
-} = require("./utils");
+
+const url2options = require("./utils/url2options");
+const getPostOptions = require("./utils/slack_utils");
+const timestampLog = require("./utils/log");
+const { sendRequest } = require("./utils/scrape");
 
 async function check_presence(url, callbackLogic) {
   // timestampLog(`[CHECK_PRESENCE]: Querying...`);
@@ -37,4 +36,4 @@ async function check_presence(url, callbackLogic) {
   }
 }
 
-module.exports = { check_presence };
+module.exports = check_presence;

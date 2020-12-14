@@ -1,4 +1,9 @@
-const { sendRequestHttp, round, setState, timestampLog } = require("./utils");
+const round = require("./utils/calculate");
+const { setState } = require("./utils/hass");
+const { sendRequestHttp } = require("./utils/scrape");
+const timestampLog = require("./utils/log");
+
+const fixer_api = process.env.FIXERAPI || "";
 
 function calculateCurrency(rates, baseList = [], target) {
   const isTargetValid =
@@ -24,11 +29,11 @@ function calculateCurrency(rates, baseList = [], target) {
   return response;
 }
 
-async function fixer(api = "", base, target) {
+async function fixer(base, target) {
   timestampLog(`[FIXER]: Querying...`);
   const options = {
     host: "data.fixer.io",
-    path: `/api/latest?access_key=${api}&base=EUR`,
+    path: `/api/latest?access_key=${fixer_api}&base=EUR`,
     method: "GET",
     headers: {
       "Content-type": "application/json",
@@ -42,6 +47,4 @@ async function fixer(api = "", base, target) {
   timestampLog(`[FIXER] ${JSON.stringify(data)}`);
 }
 
-module.exports = {
-  fixer,
-};
+module.exports = fixer;

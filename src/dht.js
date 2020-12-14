@@ -1,5 +1,7 @@
 const dht = require("node-dht-sensor").promises;
-const { round, setState, timestampLog } = require("./utils");
+const round = require("./utils/calculate");
+const { setState } = require("./utils/hass");
+const timestampLog = require("./utils/log");
 
 function setTemperature(temp) {
   const payloadTemp = {
@@ -50,6 +52,4 @@ function readDht(pin) {
     .catch(console.error);
 }
 
-module.exports = {
-  readDht,
-};
+module.exports = readDht;

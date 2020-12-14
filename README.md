@@ -8,6 +8,8 @@ Configuration for each utils are inside `src/config.json`
 5. [Check Presence](#check-presence)
 6. [Post checker](#post-checker)
 7. [Steamgift](#steamgift)
+8. [Watcher](#watcher)
+9. [Hardverapro auto bumper](#hardverapro-auto-bumper)
 
 ### AWS Cost
 Get current month AWS cost from `aws2` CLI and log to a file.
@@ -120,5 +122,38 @@ export SG_SESSID="abcdefghijklmnopqrstuvwxyz0123456789"
 "steamgifts": {
   "allowed": true,
   "delay": 300000
+}
+```
+
+### Watcher
+Watches an item on the marketplace platforms `hardverapro` and `jofogas`.
+Notifies if a new item is posted on them.
+#### Example config
+```json
+"watcher": {
+  "allowed": true,
+  "delay": 20000,
+  "config": [{ "name": "lego", "jofogas": true, "hardverapro": false }]
+}
+```
+
+### Hardverapro auto bumper
+Automatically bumps an item on the `hardverapro` marketplace.
+Identifier cookie is used from env variables.
+```sh
+export HVA_ID="ha842hsdfjsdiusrmbmsdidkans"
+```
+### Example config
+```json
+"hvapro": {
+  "allowed": true,
+  "delay": 1800000,
+  "items" : [
+    {
+      "name": "item",
+      "fidentifier": "itemfidentifierasdlasjldjasdlajsldladjsclasmdmas",
+      "delay" : 2
+    }
+  ]
 }
 ```

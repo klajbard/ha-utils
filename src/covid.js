@@ -3,7 +3,9 @@
 const https = require("https");
 const fs = require("fs");
 const { JSDOM } = require("jsdom");
-const { sendRequest, getPostOptions, timestampLog } = require("./utils");
+const getPostOptions = require("./utils/slack_utils");
+const timestampLog = require("./utils/log");
+const { sendRequest } = require("./utils/scrape");
 
 function getsendRequest(data, delta) {
   return JSON.stringify({
@@ -91,4 +93,4 @@ async function covid(logFile) {
   });
 }
 
-module.exports = { covid };
+module.exports = covid;

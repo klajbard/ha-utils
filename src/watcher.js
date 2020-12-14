@@ -3,7 +3,9 @@
 const https = require("https");
 const fs = require("fs");
 const { JSDOM } = require("jsdom");
-const { sendRequest, getPostOptions, timestampLog } = require("./utils");
+const getPostOptions = require("./utils/slack_utils");
+const { sendRequest } = require("./utils/scrape");
+const timestampLog = require("./utils/log");
 
 function getsendRequest(newItems) {
   return JSON.stringify({
@@ -112,6 +114,4 @@ function watcher(config) {
   });
 }
 
-module.exports = {
-  watcher,
-};
+module.exports = watcher;

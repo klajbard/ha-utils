@@ -1,6 +1,9 @@
-const { timestampLog, sendRequest } = require("./utils");
+const { sendRequest } = require("./utils/scrape");
+const timestampLog = require("./utils/log");
 
-function steamgifts(sessionId) {
+const sessionId = process.env.SG_SESSID;
+
+function steamgifts() {
   timestampLog(`[SG]: Querying...`);
   const cookie = `PHPSESSID=${sessionId}`;
 
@@ -41,6 +44,4 @@ function steamgifts(sessionId) {
   });
 }
 
-module.exports = {
-  steamgifts,
-};
+module.exports = steamgifts;

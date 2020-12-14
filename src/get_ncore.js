@@ -2,7 +2,14 @@
 
 const JSDOM = require("jsdom").JSDOM;
 const exec = require("child_process").exec;
-const { sendRequest, setState, timestampLog } = require("./utils");
+const { setState } = require("./utils/hass");
+const { sendRequest } = require("./utils/scrape");
+const timestampLog = require("./utils/log");
+
+const ncore_user = {
+  username: process.env.NCORE_USERNAME || "",
+  password: process.env.NCORE_PASSWORD || "",
+};
 
 const mapHun = [
   "ncore_daily_rank",
@@ -56,8 +63,8 @@ function getRequestOptions(cookie) {
   };
 }
 
-async function get_ncore(user = { username: "", password: "" }) {
-  const command = `curl -F "nev=${user.username}" -F "pass=${user.password}" https://ncore.cc/login.php  -c - | grep -oP "(?<=PHPSESSID\\t).*?$" | tr -d "\\n"`;
+async function get_ncore() {
+  const command = `curl -F "nev=${ncore_user.username}" -F "pass=${ncore_user.password}" https://ncore.cc/login.php  -c - | grep -oP "(?<=PHPSESSID\\t).*?$" | tr -d "\\n"`;
   exec(command, async (err, stdout, stderr) => {
     const cookie = stdout;
     if (err) return console.error(err);
@@ -67,6 +74,4 @@ async function get_ncore(user = { username: "", password: "" }) {
   });
 }
 
-module.exports = {
-  get_ncore,
-};
+module.exports = get_ncore;

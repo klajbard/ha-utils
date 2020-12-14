@@ -1,8 +1,10 @@
 "use strict";
 
 const fs = require("fs");
-const exec = require("child_process").exec;
-const { execShellCommand, round, setState, timestampLog } = require("./utils");
+const execShellCommand = require("./utils/exec_shell");
+const round = require("./utils/calculate");
+const timestampLog = require("./utils/log");
+const { setState } = require("./utils/hass");
 
 const FILE_VALID_TIME = 1000 * 60 * 60 * 24 * 4; // 4 days
 
@@ -81,6 +83,4 @@ async function getAWSCost(logFile) {
   }
 }
 
-module.exports = {
-  getAWSCost,
-};
+module.exports = getAWSCost;

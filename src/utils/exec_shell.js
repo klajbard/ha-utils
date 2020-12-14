@@ -1,3 +1,5 @@
+const exec = require("child_process").exec;
+
 function execShellCommand(command) {
   return new Promise((resolve, reject) => {
     exec(command, (error, stdout, stderr) => {

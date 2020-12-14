@@ -4,6 +4,17 @@
     "delay": 43200000,
     "logFile": "./log/awscost"
   },
+  "hvapro": {
+    "allowed": true,
+    "delay": 1800000,
+    "items": [
+      {
+        "name": "bontatlan_kitvision_escape_hd5w_1080p_akciokamera",
+        "fidentifier": "60c9a61d702495405ed671b2aaf66b255355f86f1f6972147645c0748147b5bd",
+        "delay": 2
+      }
+    ]
+  },
   "covid": {
     "allowed": true,
     "delay": 1800000,

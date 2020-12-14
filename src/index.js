@@ -1,22 +1,16 @@
 "use strict";
 
-const { check_presence } = require("./check_presence");
-const { getAWSCost } = require("./aws_cost");
-const { scraper } = require("./post_scrape");
-const { get_ncore } = require("./get_ncore");
-const { readDht } = require("./dht");
-const { steamgifts } = require("./steamgift");
-const { fixer } = require("./fixer");
-const { covid } = require("./covid");
-const { watcher } = require("./watcher");
+const bump_hvapro = require("./bump_hvapro");
+const check_presence = require("./check_presence");
+const get_aws_cost = require("./aws_cost");
+const scraper = require("./post_scrape");
+const get_ncore = require("./get_ncore");
+const read_dht = require("./dht");
+const steamgifts = require("./steamgift");
+const fixer = require("./fixer");
+const covid = require("./covid");
+const watcher = require("./watcher");
 const config = require("./config.json");
-
-const sg_session = process.env.SG_SESSID;
-const fixer_api = process.env.FIXERAPI;
-const ncore_user = {
-  username: process.env.NCORE_USERNAME,
-  password: process.env.NCORE_PASSWORD,
-};
 
 (async function () {
   const tick = 5000;
@@ -45,7 +39,7 @@ const ncore_user = {
 
     shouldRun(config.aws.delay) &&
       config.aws.allowed &&
-      getAWSCost(config.aws.logFile);
+      get_aws_cost(config.aws.logFile);
 
     shouldRun(config.scraper.delay) &&
       config.scraper.allowed &&
@@ -55,21 +49,19 @@ const ncore_user = {
         config.scraper.queries[0].logFile
       );
 
-    shouldRun(config.ncore.delay) &&
-      config.ncore.allowed &&
-      get_ncore(ncore_user);
+    shouldRun(config.ncore.delay) && config.ncore.allowed && get_ncore();
 
     shouldRun(config.dht.delay) &&
       config.dht.allowed &&
-      readDht(config.dht.pin);
+      read_dht(config.dht.pin);
 
     shouldRun(config.steamgifts.delay) &&
       config.steamgifts.allowed &&
-      steamgifts(sg_session);
+      steamgifts();
 
     shouldRun(config.fixer.delay) &&
       config.fixer.allowed &&
-      fixer(fixer_api, config.fixer.base, config.fixer.target);
+      fixer(config.fixer.base, config.fixer.target);
 
     shouldRun(config.covid.delay) &&
       config.covid.allowed &&
@@ -78,6 +70,14 @@ const ncore_user = {
     shouldRun(config.watcher.delay) &&
       config.watcher.allowed &&
       watcher(config.watcher.config);
+
+    shouldRun(config.hvapro.delay) &&
+      config.hvapro.allowed &&
+      bump_hvapro(
+        config.hvapro.items[0].name,
+        config.hvapro.items[0].fidentifier,
+        config.hvapro.items[0].delay
+      );
   }
 
   let counter = 0;
