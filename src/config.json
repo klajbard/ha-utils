@@ -1,19 +1,9 @@
 {
-  "aws": {
+  "tick": 5000,
+  "aws_cost": {
     "allowed": true,
     "delay": 43200000,
     "logFile": "./log/awscost"
-  },
-  "hvapro": {
-    "allowed": true,
-    "delay": 1800000,
-    "items": [
-      {
-        "name": "bontatlan_kitvision_escape_hd5w_1080p_akciokamera",
-        "fidentifier": "60c9a61d702495405ed671b2aaf66b255355f86f1f6972147645c0748147b5bd",
-        "delay": 2
-      }
-    ]
   },
   "covid": {
     "allowed": true,
@@ -31,6 +21,22 @@
     "base": ["EUR", "USD", "GBP"],
     "target": "HUF"
   },
+  "hvapro_bump": {
+    "allowed": true,
+    "delay": 1800000,
+    "items": [
+      {
+        "name": "bontatlan_kitvision_escape_hd5w_1080p_akciokamera",
+        "fidentifier": "60c9a61d702495405ed671b2aaf66b255355f86f1f6972147645c0748147b5bd",
+        "delay": 2
+      }
+    ]
+  },
+  "item_watcher": {
+    "allowed": true,
+    "delay": 20000,
+    "config": [{ "name": "raspberry", "jofogas": true, "hardverapro": true }]
+  },
   "ncore": {
     "allowed": true,
     "delay": 7200000
@@ -45,7 +51,7 @@
       }
     ]
   },
-  "scraper": {
+  "post_watcher": {
     "allowed": true,
     "delay": 14400000,
     "queries": [
@@ -59,10 +65,5 @@
   "steamgifts": {
     "allowed": true,
     "delay": 300000
-  },
-  "watcher": {
-    "allowed": true,
-    "delay": 20000,
-    "config": [{ "name": "raspberry", "jofogas": true, "hardverapro": true }]
   }
 }

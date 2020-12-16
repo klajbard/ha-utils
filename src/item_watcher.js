@@ -41,7 +41,7 @@ function callback(body, { logFile, query }) {
   const dom = new JSDOM(body);
   const itemsDOM = dom.window.document.querySelectorAll(query.item);
   if (!process.env.SLACK_PRESENCE) {
-    timestampLog(`[WATCHER]: No Slack API given.`);
+    timestampLog(`[ITEM_WATCHER]: No Slack API given.`);
     return;
   }
   fs.readFile(logFile, (err, data) => {
@@ -60,7 +60,7 @@ function callback(body, { logFile, query }) {
       const url = nameDOM.href.trim();
       const price = priceDOM.textContent.trim();
       if (!oldItems.length) {
-        timestampLog(`[WATCHER]: New item: ${name}.`);
+        timestampLog(`[ITEM_WATCHER]: New item: ${name}.`);
         newItems.push({ name, url, price });
       } else {
         const isPresent = oldItems.find((oldItem) => {
@@ -80,7 +80,7 @@ function callback(body, { logFile, query }) {
       });
 
       const req = https.request(getPostOptions("presence"), (res) => {
-        console.log("[WATCHER]: statusCode:", res.statusCode);
+        console.log("[ITEM_WATCHER]: statusCode:", res.statusCode);
       });
       req.on("error", (e) => {
         console.error(e);
@@ -91,8 +91,8 @@ function callback(body, { logFile, query }) {
   });
 }
 
-function watcher(config) {
-  // timestampLog(`[WATCHER]: Querying...`);
+function item_watcher(config) {
+  // timestampLog(`[ITEM_WATCHER]: Querying...`);
   if (!config.length) return;
   config.forEach(async (item) => {
     if (item.jofogas) {
@@ -114,4 +114,4 @@ function watcher(config) {
   });
 }
 
-module.exports = watcher;
+module.exports = item_watcher;

@@ -8,10 +8,10 @@ const timestampLog = require("./utils/log");
 const identifier = process.env.HVA_ID || "";
 
 async function bump_hvapro(prod_name, fidentifier, bump_interval) {
-  if ((new Date()).getHours() < 8) {
+  if (new Date().getHours() < 8) {
     return;
   }
-  timestampLog(`[HVAPRO_BUMP]: Querying...`);
+  timestampLog(`[BUMP_HVAPRO]: Querying...`);
   const url = `https://hardverapro.hu/apro/${prod_name}/hsz_1-50.html`;
   const body = await sendRequest(url);
   const dom = new JSDOM(body);
@@ -37,7 +37,7 @@ async function bump_hvapro(prod_name, fidentifier, bump_interval) {
   };
 
   const req = https.request(get_options, (res) => {
-    timestampLog(`[HVAPRO_BUMP]: statusCode: ${res.statusCode}`);
+    timestampLog(`[BUMP_HVAPRO]: statusCode: ${res.statusCode}`);
   });
   req.on("error", console.error);
   req.write(content);

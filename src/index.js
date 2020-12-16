@@ -2,18 +2,30 @@
 
 const bump_hvapro = require("./bump_hvapro");
 const check_presence = require("./check_presence");
-const get_aws_cost = require("./aws_cost");
-const scraper = require("./post_scrape");
+const get_aws_cost = require("./get_aws_cost");
 const get_ncore = require("./get_ncore");
 const read_dht = require("./dht");
-const steamgifts = require("./steamgift");
-const fixer = require("./fixer");
-const covid = require("./covid");
-const watcher = require("./watcher");
+const run_covid = require("./covid");
+const run_fixer = require("./fixer");
+const run_item_watcher = require("./item_watcher");
+const run_post_watcher = require("./post_watcher");
+const run_steamgifts = require("./steamgift");
 const config = require("./config.json");
 
 (async function () {
-  const tick = 5000;
+  const {
+    tick,
+    aws_cost,
+    hvapro_bump,
+    covid,
+    dht,
+    fixer,
+    ncore,
+    presence,
+    post_watcher,
+    steamgifts,
+    item_watcher,
+  } = config;
 
   async function delay() {
     return new Promise(function (resolve) {
@@ -22,9 +34,7 @@ const config = require("./config.json");
   }
 
   function callbackLogic(dom) {
-    const elem = dom.window.document.querySelector(
-      config.presence.queries[0].query
-    );
+    const elem = dom.window.document.querySelector(presence.queries[0].query);
     return elem && !!elem.children.length;
   }
 
@@ -33,50 +43,44 @@ const config = require("./config.json");
       return (counter * tick) % delay === 0;
     }
 
-    shouldRun(config.presence.delay) &&
-      config.presence.allowed &&
-      check_presence(config.presence.queries[0].url, callbackLogic);
+    shouldRun(presence.delay) &&
+      presence.allowed &&
+      check_presence(presence.queries[0].url, callbackLogic);
 
-    shouldRun(config.aws.delay) &&
-      config.aws.allowed &&
-      get_aws_cost(config.aws.logFile);
+    shouldRun(aws_cost.delay) &&
+      aws_cost.allowed &&
+      get_aws_cost(aws_cost.logFile);
 
-    shouldRun(config.scraper.delay) &&
-      config.scraper.allowed &&
-      scraper(
-        config.scraper.queries[0].url,
-        config.scraper.queries[0].query,
-        config.scraper.queries[0].logFile
+    shouldRun(post_watcher.delay) &&
+      post_watcher.allowed &&
+      run_post_watcher(
+        post_watcher.queries[0].url,
+        post_watcher.queries[0].query,
+        post_watcher.queries[0].logFile
       );
 
-    shouldRun(config.ncore.delay) && config.ncore.allowed && get_ncore();
+    shouldRun(ncore.delay) && ncore.allowed && get_ncore();
 
-    shouldRun(config.dht.delay) &&
-      config.dht.allowed &&
-      read_dht(config.dht.pin);
+    shouldRun(dht.delay) && dht.allowed && read_dht(dht.pin);
 
-    shouldRun(config.steamgifts.delay) &&
-      config.steamgifts.allowed &&
-      steamgifts();
+    shouldRun(steamgifts.delay) && steamgifts.allowed && run_steamgifts();
 
-    shouldRun(config.fixer.delay) &&
-      config.fixer.allowed &&
-      fixer(config.fixer.base, config.fixer.target);
+    shouldRun(fixer.delay) &&
+      fixer.allowed &&
+      run_fixer(fixer.base, fixer.target);
 
-    shouldRun(config.covid.delay) &&
-      config.covid.allowed &&
-      covid(config.covid.logFile);
+    shouldRun(covid.delay) && covid.allowed && run_covid(covid.logFile);
 
-    shouldRun(config.watcher.delay) &&
-      config.watcher.allowed &&
-      watcher(config.watcher.config);
+    shouldRun(item_watcher.delay) &&
+      item_watcher.allowed &&
+      run_item_watcher(item_watcher.config);
 
-    shouldRun(config.hvapro.delay) &&
-      config.hvapro.allowed &&
+    shouldRun(hvapro_bump.delay) &&
+      hvapro_bump.allowed &&
       bump_hvapro(
-        config.hvapro.items[0].name,
-        config.hvapro.items[0].fidentifier,
-        config.hvapro.items[0].delay
+        hvapro_bump.items[0].name,
+        hvapro_bump.items[0].fidentifier,
+        hvapro_bump.items[0].delay
       );
   }
 
