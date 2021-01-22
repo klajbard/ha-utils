@@ -27,14 +27,14 @@
     "items": [
       {
         "name": "bontatlan_kitvision_escape_hd5w_1080p_akciokamera",
-        "fidentifier": "60c9a61d702495405ed671b2aaf66b255355f86f1f6972147645c0748147b5bd",
+        "fidentifier": "d788102600d0d1fcdea39b9231114fd0ab26a010827e840d922ffaa0de5b7df4",
         "delay": 2
       }
     ]
   },
   "item_watcher": {
     "allowed": true,
-    "delay": 20000,
+    "delay": 60000,
     "config": [
       { "name": "raspberry", "jofogas": true, "hardverapro": true },
       { "name": "zigbee", "jofogas": true, "hardverapro": true }
