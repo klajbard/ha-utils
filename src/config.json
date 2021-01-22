@@ -35,7 +35,10 @@
   "item_watcher": {
     "allowed": true,
     "delay": 20000,
-    "config": [{ "name": "raspberry", "jofogas": true, "hardverapro": true }]
+    "config": [
+      { "name": "raspberry", "jofogas": true, "hardverapro": true },
+      { "name": "zigbee", "jofogas": true, "hardverapro": true }
+    ]
   },
   "ncore": {
     "allowed": true,
@@ -46,8 +49,7 @@
     "delay": 5000,
     "queries": [
       {
-        "url": "https://www.philips.hu/c-p/QP220_50/oneblade-cserelhetoe-penge",
-        "query": ".p-p01v2__shop-delivery-time:not(.p-hidden)"
+        "url": "https://www.optimusdigital.ro/en/raspberry-pi-boards/12024-raspberry-pi-pico-728886755172.html"
       }
     ]
   },

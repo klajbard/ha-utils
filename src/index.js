@@ -34,8 +34,7 @@ const config = require("./config.json");
   }
 
   function callbackLogic(dom) {
-    const elem = dom.window.document.querySelector(presence.queries[0].query);
-    return elem && !!elem.children.length;
+    return parseInt(dom.window.document.getElementById("quantityAvailable").textContent);
   }
 
   async function execute(counter) {
